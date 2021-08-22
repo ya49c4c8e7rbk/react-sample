@@ -1,0 +1,58 @@
+version: "3"
+services:
+  swagger-editor:
+    image: swaggerapi/swagger-editor
+    container_name: "swagger-editor"
+    ports:
+      - "8001:8080"
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui"
+    ports:
+      - "8002:8080"
+    volumes:
+      - ./swagger/openapi.yaml:/openapi.yaml
+    environment:
+      SWAGGER_JSON: /openapi.yaml
+  mysql:
+    image: mysql:8
+    container_name: "mysql"
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass
+    tty: true
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf/my.cnf:/etc/my.cnf
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: "phpmyadmin"
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=pass
+    tty: true
+    ports:
+      - 8080:80
+    volumes:
+      - ./phpmyadmin/phpmyadmin-misc.ini:/usr/local/etc/php/conf.d/phpmyadmin-misc.ini
+  app:
+    image: node:12
+    container_name: "app"
+    tty: true
+    ports:
+      - 3000:3000
+    volumes:
+      - ../api:/app
+      - ./.ssh:/app/.ssh
+    working_dir: /app
+    command: >
+      bash -c "
+      cp -r /app/.ssh /root/.ssh &&
+      chmod 0600 -R /root/.ssh &&
+      yarn start:dev"
+volumes:
+  mysqldata:

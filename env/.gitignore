@@ -1,0 +1,5 @@
+.data
+mysql/data
+*.pem
+*.ppk
+known_hosts

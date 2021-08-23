@@ -14,7 +14,7 @@ import { UsersModule } from './users/users.module';
       port: 3306,
       username: 'root',
       password: 'pass',
-      database: 'sample_db',
+      database: 'react_sample',
       entities: [User],
       synchronize: true,
     }),

@@ -10,9 +10,9 @@ export default class CreateUsers implements Seeder {
       .into(User)
       .values([
         {
-          name: '直井俊樹',
-          userId: 't-naoi',
-          email: 't-naoi@i-enter.co.jp',
+          name: 'テストユーザ',
+          userId: 'test-user',
+          email: 'test-user@example.com',
           password: 'password',
         },
       ])

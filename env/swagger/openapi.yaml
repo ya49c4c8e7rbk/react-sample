@@ -49,7 +49,7 @@ paths:
               properties:
                 email:
                   type: string
-                  example: t-naoi@i-enter.co.jp
+                  example: test-user@example.com
                 password:
                   type: string
                   example: password
@@ -107,10 +107,10 @@ paths:
               properties:
                 name:
                   type: string
-                  example: 直井俊樹
+                  example: テストユーザ
                 email:
                   type: string
-                  example: t-naoi@i-enter.co.jp
+                  example: test-user@example.com
                 password:
                   type: string
                   example: password

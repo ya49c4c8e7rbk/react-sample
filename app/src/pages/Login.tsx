@@ -4,8 +4,8 @@ import { useLogin } from '../context/AuthUser';
 
 const Login = () => {
   const history = useHistory();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('test-user@example.com'); // 開発用にログインできる値をデフォルトで挿入
+  const [password, setPassword] = useState('password'); // 開発用にログインできる値をデフォルトで挿入
   const login = useLogin();
 
   const handleLogin = () => {

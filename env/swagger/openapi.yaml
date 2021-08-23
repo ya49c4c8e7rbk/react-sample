@@ -145,8 +145,8 @@ paths:
                 type: object
                 example:
                   id: 1
-                  name: xxxxxxxxxx
-                  userId: xxxxxxxxxx
+                  name: テストユーザ
+                  userId: test-user
         401:
           description: Unauthorized
           content: {}

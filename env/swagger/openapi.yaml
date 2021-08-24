@@ -68,10 +68,26 @@ paths:
               schema: 
                 type: object
                 example:
-                  msg: success
+                  statusCode: 201
+                  message: success
         401:
           description: Unauthorized
-          content: {}
+          content:
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 401
+                  message: Unauthorized
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 500
+                  message: Internal Server Error
   /users/logout:
     post:
       tags:

@@ -1,4 +1,5 @@
 export class BaseRespModel {
     statusCode: number;
-    message: string;
+    message: string | string[];
+    error?: string;
 }

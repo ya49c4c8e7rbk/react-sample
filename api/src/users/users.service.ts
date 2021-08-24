@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RegistrationReqModel } from 'src/models/registration.req.model';
-import { RegistrationRespModel } from 'src/models/registration.resp.model';
+import { RegistReqModel } from './models/regist.req.model';
+import { RegistRespModel } from './models/regist.resp.model';
 import { MoreThanOrEqual, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcryptjs';
@@ -18,7 +18,7 @@ export class UsersService {
   ) {}
 
   private async registrationValidation(
-    regModel: RegistrationReqModel,
+    regModel: RegistReqModel,
   ): Promise<string> {
     if (!regModel.email) {
       return "Email can't be empty";
@@ -47,14 +47,13 @@ export class UsersService {
   }
 
   public async registerUser(
-    regModel: RegistrationReqModel,
-  ): Promise<RegistrationRespModel> {
-    const result = new RegistrationRespModel();
+    regModel: RegistReqModel,
+  ): Promise<RegistRespModel> {
+    const result = new RegistRespModel();
 
     const errorMessage = await this.registrationValidation(regModel);
     if (errorMessage) {
-      result.msg = 'failed';
-      return result;
+      throw new UnprocessableEntityException();
     }
 
     const newUser = new User();
@@ -63,7 +62,8 @@ export class UsersService {
     newUser.password = await this.getPasswordHash(regModel.password);
 
     await this.user.insert(newUser);
-    result.msg = 'succeess';
+    result.statusCode = 201;
+    result.message = 'success';
     return result;
   }
 

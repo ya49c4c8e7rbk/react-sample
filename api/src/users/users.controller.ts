@@ -11,17 +11,19 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { CurrentUser } from 'src/models/current.user';
-import { RegistrationReqModel } from 'src/models/registration.req.model';
+import { RegistReqModel } from './models/regist.req.model';
+import { RegistRespModel } from './models/regist.resp.model';
 import { LoginRespModel } from './models/login.resp.model';
 import { UsersService } from './users.service';
+import { RegistUserDTO } from './users.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
 
-  @Post('registration')
-  async registerUser(@Body() reg: RegistrationReqModel) {
-    return await this.userService.registerUser(reg);
+  @Post('regist')
+  async registerUser(@Body() registUserDTO: RegistUserDTO): Promise<RegistRespModel> {
+    return await this.userService.registerUser(registUserDTO);
   }
 
   @Post('login')

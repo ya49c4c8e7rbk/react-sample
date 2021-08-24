@@ -108,12 +108,12 @@ paths:
         401:
           description: Unauthorized
           content: {}
-  /users/registration:
+  /users/regist:
     post:
       tags:
       - users
       summary: ユーザ情報登録API
-      operationId: users_registration
+      operationId: users_regist
       requestBody:
         description: ユーザ情報
         content:

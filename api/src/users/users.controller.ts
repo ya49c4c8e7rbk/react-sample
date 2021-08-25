@@ -23,6 +23,7 @@ export class UsersController {
 
   @Post('regist')
   async registerUser(@Body() registUserDTO: RegistUserDTO): Promise<RegistRespModel> {
+    console.log(registUserDTO)
     return await this.userService.registerUser(registUserDTO);
   }
 

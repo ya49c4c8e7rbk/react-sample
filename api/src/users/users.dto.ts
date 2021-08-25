@@ -1,6 +1,8 @@
-import { IsNotEmpty, IsString, IsEmail } from 'class-validator';
+import { IsNotEmpty, IsString, IsEmail, Equals } from 'class-validator';
+import { RegistReqModel } from './models/regist.req.model';
+import { IsMatchConfirm } from '../validators/index'
 
-export class RegistUserDTO {
+export class RegistUserDTO implements RegistReqModel {
 
   @IsNotEmpty()
   @IsString()
@@ -16,5 +18,8 @@ export class RegistUserDTO {
     
   @IsNotEmpty()
   @IsString()
+  @IsMatchConfirm('password', {
+    message: 'Confirm password not matching'
+  })
   confirmPassword: string;
 }

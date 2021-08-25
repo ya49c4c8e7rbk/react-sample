@@ -20,24 +20,11 @@ export class UsersService {
   private async registrationValidation(
     regModel: RegistReqModel,
   ): Promise<string> {
-    if (!regModel.email) {
-      return "Email can't be empty";
-    }
-
-    const emailRule =
-      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    if (!emailRule.test(regModel.email.toLowerCase())) {
-      return 'Invalid email';
-    }
-
     const user = await this.user.findOne({ email: regModel.email });
     if (user != null && user.email) {
       return 'Email already exist';
     }
 
-    if (regModel.password !== regModel.confirmPassword) {
-      return 'Confirm password not matching';
-    }
     return '';
   }
 

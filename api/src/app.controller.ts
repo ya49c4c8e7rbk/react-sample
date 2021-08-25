@@ -7,7 +7,6 @@ export class AppController {
 
   @Get('health-check')
   getOK(): string {
-    throw new Error();
     return this.appService.getOK();
   }
 }

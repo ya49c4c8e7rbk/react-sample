@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './entities/user.entity';
 import { UsersModule } from './users/users.module';
+import { IsEmailUniqueRule } from './validators/customs/IsEmailUniqueRule';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { UsersModule } from './users/users.module';
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, IsEmailUniqueRule],
 })
 export class AppModule {}

@@ -1,4 +1,4 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RegistReqModel } from './models/regist.req.model';
 import { RegistRespModel } from './models/regist.resp.model';
@@ -15,17 +15,12 @@ export class UsersService {
   constructor(
     @InjectRepository(User) private user: Repository<User>,
     private jwtService: JwtService,
-  ) {}
-
-  private async registrationValidation(
-    regModel: RegistReqModel,
-  ): Promise<string> {
-    const user = await this.user.findOne({ email: regModel.email });
-    if (user != null && user.email) {
-      return 'Email already exist';
-    }
-
-    return '';
+  ) { }
+  
+  public async getUserByEmail(
+    email: string,
+  ): Promise<User | null> {
+    return await this.user.findOne({ email });
   }
 
   private async getPasswordHash(password: string): Promise<string> {
@@ -37,11 +32,6 @@ export class UsersService {
     regModel: RegistReqModel,
   ): Promise<RegistRespModel> {
     const result = new RegistRespModel();
-
-    const errorMessage = await this.registrationValidation(regModel);
-    if (errorMessage) {
-      throw new UnprocessableEntityException();
-    }
 
     const newUser = new User();
     newUser.name = regModel.name;

@@ -3,24 +3,24 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RegistReqModel } from './models/regist.req.model';
 import { RegistRespModel } from './models/regist.resp.model';
 import { MoreThanOrEqual, Repository } from 'typeorm';
-import { User } from '../entities/user.entity';
+import { Adminer } from '../entities/adminer.entity';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { CurrentUser } from 'src/models/current.user';
+import { CurrentAdminer } from 'src/models/current.adminer';
 import * as randomToken from 'rand-token';
 import * as moment from 'moment';
 
 @Injectable()
-export class UsersService {
+export class AdminersService {
   constructor(
-    @InjectRepository(User) private user: Repository<User>,
+    @InjectRepository(Adminer) private adminer: Repository<Adminer>,
     private jwtService: JwtService,
   ) { }
   
-  public async getUserByEmail(
+  public async getAdminerByEmail(
     email: string,
-  ): Promise<User | null> {
-    return await this.user.findOne({ email });
+  ): Promise<Adminer | null> {
+    return await this.adminer.findOne({ email });
   }
 
   private async getPasswordHash(password: string): Promise<string> {
@@ -28,77 +28,77 @@ export class UsersService {
     return hash;
   }
 
-  public async registerUser(
+  public async registerAdminer(
     regModel: RegistReqModel,
   ): Promise<RegistRespModel> {
     const result = new RegistRespModel();
 
-    const newUser = new User();
-    newUser.name = regModel.name;
-    newUser.email = regModel.email;
-    newUser.password = await this.getPasswordHash(regModel.password);
+    const newAdminer = new Adminer();
+    newAdminer.name = regModel.name;
+    newAdminer.email = regModel.email;
+    newAdminer.password = await this.getPasswordHash(regModel.password);
 
-    await this.user.insert(newUser);
+    await this.adminer.insert(newAdminer);
     result.statusCode = 201;
     result.message = 'success';
     return result;
   }
 
-  public async validateUserCredentials(
+  public async validateAdminerCredentials(
     email: string,
     password: string,
-  ): Promise<CurrentUser> {
-    const user = await this.user.findOne({ email });
+  ): Promise<CurrentAdminer> {
+    const adminer = await this.adminer.findOne({ email });
 
-    if (user == null) {
+    if (adminer == null) {
       return null;
     }
 
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = await bcrypt.compare(password, adminer.password);
     if (!isValidPassword) {
       return null;
     }
 
-    const currentUser = new CurrentUser();
-    currentUser.id = user.id;
-    currentUser.name = user.name;
-    currentUser.email = user.email;
+    const currentAdminer = new CurrentAdminer();
+    currentAdminer.id = adminer.id;
+    currentAdminer.name = adminer.name;
+    currentAdminer.email = adminer.email;
 
-    return currentUser;
+    return currentAdminer;
   }
 
-  public async getJwtToken(user: CurrentUser): Promise<string> {
+  public async getJwtToken(adminer: CurrentAdminer): Promise<string> {
     const payload = {
-      ...user,
+      ...adminer,
     };
     return this.jwtService.signAsync(payload);
   }
 
   public async getRefreshToken(id: number): Promise<string> {
-    const userDataToUpdate = {
+    const adminerDataToUpdate = {
       refreshToken: randomToken.generate(16),
       refreshTokenExp: moment().day(1).format('YYYY/MM/DD'),
     };
 
-    await this.user.update(id, userDataToUpdate);
-    return userDataToUpdate.refreshToken;
+    await this.adminer.update(id, adminerDataToUpdate);
+    return adminerDataToUpdate.refreshToken;
   }
 
   public async clearRefreshToken(id: number): Promise<void> {
-    const userDataToUpdate = {
+    const adminerDataToUpdate = {
       refreshToken: null,
       refreshTokenExp: null,
     };
 
-    await this.user.update(id, userDataToUpdate);
+    await this.adminer.update(id, adminerDataToUpdate);
   }
 
   public async validRefreshToken(
     email: string,
     refreshToken: string,
-  ): Promise<CurrentUser> {
+  ): Promise<CurrentAdminer> {
     const currentDate = moment().day(1).format('YYYY/MM/DD');
-    const user = await this.user.findOne({
+    const adminer = await this.adminer.findOne({
       where: {
         email: email,
         refreshToken: refreshToken,
@@ -106,15 +106,15 @@ export class UsersService {
       },
     });
 
-    if (!user) {
+    if (!adminer) {
       return null;
     }
 
-    const currentUser = new CurrentUser();
-    currentUser.id = user.id;
-    currentUser.name = user.name;
-    currentUser.email = user.email;
+    const currentAdminer = new CurrentAdminer();
+    currentAdminer.id = adminer.id;
+    currentAdminer.name = adminer.name;
+    currentAdminer.email = adminer.email;
 
-    return currentUser;
+    return currentAdminer;
   }
 }

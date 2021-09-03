@@ -5,7 +5,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './entities/user.entity';
 import { UsersModule } from './users/users.module';
-import { IsEmailUniqueRule } from './validators/customs/IsEmailUniqueRule';
+import { Adminer } from './entities/adminer.entity';
+import { AdminersModule } from './adminers/adminers.module';
+import { IsEmailUniqueUserRule } from './validators/customs/IsEmailUniqueUserRule';
+import { IsEmailUniqueAdminerRule } from './validators/customs/IsEmailUniqueAdminerRule';
 
 @Module({
   imports: [
@@ -16,15 +19,16 @@ import { IsEmailUniqueRule } from './validators/customs/IsEmailUniqueRule';
       username: 'root',
       password: 'pass',
       database: 'react_sample',
-      entities: [User],
+      entities: [User,Adminer],
       synchronize: true,
     }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    AdminersModule,
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService, IsEmailUniqueRule],
+  providers: [AppService, IsEmailUniqueUserRule, IsEmailUniqueAdminerRule],
 })
 export class AppModule {}

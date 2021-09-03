@@ -1,15 +1,29 @@
 import { registerDecorator, ValidationOptions, ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
-import { IsEmailUniqueRule } from 'src/validators/customs/IsEmailUniqueRule';
+import { IsEmailUniqueUserRule } from 'src/validators/customs/IsEmailUniqueUserRule';
+import { IsEmailUniqueAdminerRule } from 'src/validators/customs/IsEmailUniqueAdminerRule';
 
-export function IsEmailUnique(property?: string, validationOptions?: ValidationOptions) {
+export function IsEmailUniqueUser(property?: string, validationOptions?: ValidationOptions) {
   return function (object: Object, propertyName: string) {
     registerDecorator({
-      name: 'IsEmailUnique',
+      name: 'IsEmailUniqueUser',
       target: object.constructor,
       propertyName: propertyName,
       constraints: [property],
       options: validationOptions,
-      validator: IsEmailUniqueRule,
+      validator: IsEmailUniqueUserRule,
+    });
+  };
+}
+
+export function IsEmailUniqueAdminer(property?: string, validationOptions?: ValidationOptions) {
+  return function (object: Object, propertyName: string) {
+    registerDecorator({
+      name: 'IsEmailUniqueAdminer',
+      target: object.constructor,
+      propertyName: propertyName,
+      constraints: [property],
+      options: validationOptions,
+      validator: IsEmailUniqueAdminerRule,
     });
   };
 }

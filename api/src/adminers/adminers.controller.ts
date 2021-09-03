@@ -10,32 +10,32 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
-import { CurrentUser } from 'src/models/current.user';
+import { CurrentAdminer } from 'src/models/current.adminer';
 import { RegistReqModel } from './models/regist.req.model';
 import { RegistRespModel } from './models/regist.resp.model';
 import { LoginRespModel } from './models/login.resp.model';
-import { UsersService } from './users.service';
-import { RegistUserDTO } from './users.dto';
+import { AdminersService } from './adminers.service';
+import { RegistAdminerDTO } from './adminers.dto';
 
-@Controller('users')
-export class UsersController {
-  constructor(private userService: UsersService) {}
+@Controller('adminers')
+export class AdminersController {
+  constructor(private adminerService: AdminersService) {}
 
   @Post('regist')
-  async registerUser(@Body() registUserDTO: RegistUserDTO): Promise<RegistRespModel> {
+  async registerAdminer(@Body() registAdminerDTO: RegistAdminerDTO): Promise<RegistRespModel> {
     try {
-      return await this.userService.registerUser(registUserDTO);
+      return await this.adminerService.registerAdminer(registAdminerDTO);
     } catch (e) {
       throw new InternalServerErrorException();
     }
   }
 
   @Post('login')
-  @UseGuards(AuthGuard('local-user'))
+  @UseGuards(AuthGuard('local-adminer'))
   async login(@Req() req, @Res({ passthrough: true }) res: Response): Promise<LoginRespModel> {
     try {
-      const token = await this.userService.getJwtToken(req.user as CurrentUser);
-      const refreshToken = await this.userService.getRefreshToken(
+      const token = await this.adminerService.getJwtToken(req.user as CurrentAdminer);
+      const refreshToken = await this.adminerService.getRefreshToken(
         req.user.id,
       );
       const secretData = {
@@ -43,7 +43,7 @@ export class UsersController {
         refreshToken,
       };
 
-      res.cookie('auth-cookie-user', secretData, { httpOnly: true });
+      res.cookie('auth-cookie-adminer', secretData, { httpOnly: true });
       return { statusCode: 201, message: 'success' };
     } catch (e) {
       throw new InternalServerErrorException();
@@ -51,29 +51,29 @@ export class UsersController {
   }
 
   @Post('logout')
-  @UseGuards(AuthGuard('jwt-user'))
+  @UseGuards(AuthGuard('jwt-adminer'))
   async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
-    res.cookie('auth-cookie-user', '', { httpOnly: true });
-    await this.userService.clearRefreshToken(
+    res.cookie('auth-cookie-adminer', '', { httpOnly: true });
+    await this.adminerService.clearRefreshToken(
       req.user.id,
     );
     return { msg: 'success' };
   }
 
   @Get('profile')
-  @UseGuards(AuthGuard('jwt-user'))
+  @UseGuards(AuthGuard('jwt-adminer'))
   getProfile(@Req() req: { user }) {
     return req.user;
   }
 
   @Get('refresh-tokens')
-  @UseGuards(AuthGuard('refresh-user'))
+  @UseGuards(AuthGuard('refresh-adminer'))
   async regenerateTokens(
     @Req() req,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const token = await this.userService.getJwtToken(req.user as CurrentUser);
-    const refreshToken = await this.userService.getRefreshToken(
+    const token = await this.adminerService.getJwtToken(req.user as CurrentAdminer);
+    const refreshToken = await this.adminerService.getRefreshToken(
       req.user.id,
     );
     const secretData = {
@@ -81,7 +81,7 @@ export class UsersController {
       refreshToken,
     };
 
-    res.cookie('auth-cookie-user', secretData, { httpOnly: true });
+    res.cookie('auth-cookie-adminer', secretData, { httpOnly: true });
     return { msg: 'success' };
   }
 }

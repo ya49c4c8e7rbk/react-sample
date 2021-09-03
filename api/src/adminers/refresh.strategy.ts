@@ -7,18 +7,18 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { UsersService } from './users.service';
+import { AdminersService } from './adminers.service';
 
 @Injectable()
-export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh-user') {
-  constructor(private userService: UsersService, private readonly configService: ConfigService) {
+export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh-adminer') {
+  constructor(private adminerService: AdminersService, private readonly configService: ConfigService) {
     super({
       ignoreExpiration: true,
       passReqToCallback: true,
-      secretOrKey: configService.get<string>('JWT_SECRET_KEY_USER'),
+      secretOrKey: configService.get<string>('JWT_SECRET_KEY_ADMINER'),
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
-          const data = request?.cookies['auth-cookie-user'];
+          const data = request?.cookies['auth-cookie-adminer'];
           if (!data) {
             return null;
           }
@@ -32,18 +32,18 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh-user') 
     if (!payload) {
       throw new BadRequestException('invalid jwt token');
     }
-    const data = req?.cookies['auth-cookie-user'];
+    const data = req?.cookies['auth-cookie-adminer'];
     if (!data?.refreshToken) {
       throw new BadRequestException('invalid refresh token');
     }
-    const user = await this.userService.validRefreshToken(
+    const adminer = await this.adminerService.validRefreshToken(
       payload.email,
       data.refreshToken,
     );
-    if (!user) {
+    if (!adminer) {
       throw new BadRequestException('token expired');
     }
 
-    return user;
+    return adminer;
   }
 }

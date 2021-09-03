@@ -5,25 +5,25 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
 import { RefreshStrategy } from './refresh.strategy';
-import { User } from '../entities/user.entity';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
+import { Adminer } from '../entities/adminer.entity';
+import { AdminersController } from './adminers.controller';
+import { AdminersService } from './adminers.service';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([Adminer]),
     JwtModule.register({
-      secret: process.env.JWT_SECRET_KEY_USER,
+      secret: process.env.JWT_SECRET_KEY_ADMINER,
       signOptions: {
         expiresIn: 30,
       },
     }),
     PassportModule,
   ],
-  providers: [UsersService, LocalStrategy, JwtStrategy, RefreshStrategy],
-  controllers: [UsersController],
-  exports: [UsersService],
+  providers: [AdminersService, LocalStrategy, JwtStrategy, RefreshStrategy],
+  controllers: [AdminersController],
+  exports: [AdminersService],
 })
-export class UsersModule {}
+export class AdminersModule {}

@@ -7,8 +7,8 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 
-@Entity({ name: 'users' })
-export class User {
+@Entity({ name: 'adminers' })
+export class Adminer {
   @PrimaryGeneratedColumn()
   readonly id: number;
 
@@ -16,7 +16,7 @@ export class User {
   name: string;
 
   @Column()
-  userId: string;
+  adminerId: string;
 
   @Column()
   email: string;

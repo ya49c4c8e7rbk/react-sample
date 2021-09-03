@@ -5,14 +5,14 @@ import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt-user') {
+export class JwtStrategy extends PassportStrategy(Strategy, 'jwt-adminer') {
   constructor(private readonly configService: ConfigService) {
     super({
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET_KEY_USER'),
+      secretOrKey: configService.get<string>('JWT_SECRET_KEY_ADMINER'),
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
-          const data = request?.cookies['auth-cookie-user'];
+          const data = request?.cookies['auth-cookie-adminer'];
           if (!data) {
             return null;
           }

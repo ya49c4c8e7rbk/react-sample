@@ -2,9 +2,9 @@ import { ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface 
 import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 
-@ValidatorConstraint({ name: 'IsEmailUniqueRule', async: true })
+@ValidatorConstraint({ name: 'IsEmailUniqueUserRule', async: true })
 @Injectable()
-export class IsEmailUniqueRule implements ValidatorConstraintInterface {
+export class IsEmailUniqueUserRule implements ValidatorConstraintInterface {
   constructor(private readonly userService: UsersService) { }
   async validate(email: string) {
     try {

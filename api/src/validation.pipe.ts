@@ -13,7 +13,7 @@ import { plainToClass } from 'class-transformer';
 @Injectable({
   scope: Scope.REQUEST,
 })
-export class ValidationPipe2 implements PipeTransform<any> {
+export class ValidationPipe implements PipeTransform<any> {
   constructor(@Inject(REQUEST) public request: any) {}
 
   async transform(value: any, { metatype }: ArgumentMetadata) {

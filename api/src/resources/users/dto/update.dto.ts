@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, IsEmail } from 'class-validator';
 import { UpdateReqModel } from '../models/update.req.model';
-import { IsEmailUniqueUser } from '../../validators/index';
+import { IsEmailUniqueUser } from '../../../validators/index';
 
 export class UpdateDTO implements UpdateReqModel {
   @IsNotEmpty()

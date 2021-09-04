@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, IsEmail } from 'class-validator';
 import { StoreReqModel } from '../models/store.req.model';
-import { IsEmailUniqueUser, IsMatchConfirm } from '../../validators/index';
+import { IsEmailUniqueUser, IsMatchConfirm } from '../../../validators/index';
 
 export class StoreDTO implements StoreReqModel {
   @IsNotEmpty()

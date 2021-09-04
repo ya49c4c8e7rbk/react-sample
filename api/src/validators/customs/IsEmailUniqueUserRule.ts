@@ -5,7 +5,7 @@ import {
 } from 'class-validator';
 import { Injectable } from '@nestjs/common';
 import { FindOperator, Not } from 'typeorm';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/resources/users/users.service';
 
 @ValidatorConstraint({ name: 'IsEmailUniqueUserRule', async: true })
 @Injectable()

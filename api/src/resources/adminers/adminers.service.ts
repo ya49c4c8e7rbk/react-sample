@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RegistReqModel } from './models/regist.req.model';
 import { RegistRespModel } from './models/regist.resp.model';
 import { MoreThanOrEqual, Repository } from 'typeorm';
-import { Adminer } from '../../entities/adminer.entity';
+import { Adminer } from '../../../entities/adminer.entity';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { CurrentAdminer } from 'src/models/current.adminer';

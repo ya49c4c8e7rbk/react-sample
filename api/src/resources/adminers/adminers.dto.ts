@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, IsEmail } from 'class-validator';
 import { RegistReqModel } from './models/regist.req.model';
-import { IsEmailUniqueAdminer, IsMatchConfirm } from '../validators/index';
+import { IsEmailUniqueAdminer, IsMatchConfirm } from '../../validators/index';
 
 export class RegistAdminerDTO implements RegistReqModel {
   @IsNotEmpty()

@@ -4,7 +4,7 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { Injectable } from '@nestjs/common';
-import { AdminersService } from 'src/adminers/adminers.service';
+import { AdminersService } from 'src/resources/adminers/adminers.service';
 
 @ValidatorConstraint({ name: 'IsEmailUniqueAdminerRule', async: true })
 @Injectable()

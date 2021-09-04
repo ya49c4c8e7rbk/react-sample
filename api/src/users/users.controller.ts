@@ -13,6 +13,9 @@ import { Response } from 'express';
 import { CurrentUser } from 'src/models/current.user';
 import { RegistRespModel } from './models/regist.resp.model';
 import { LoginRespModel } from './models/login.resp.model';
+import { LogoutRespModel } from './models/logout.resp.model';
+import { ProfileRespModel } from './models/profile.resp.model';
+import { RefreshTokenRespModel } from './models/refresh-token.resp.model';
 import { UsersService } from './users.service';
 import { RegistUserDTO } from './users.dto';
 
@@ -54,16 +57,19 @@ export class UsersController {
 
   @Post('logout')
   @UseGuards(AuthGuard('jwt-user'))
-  async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
+  async logout(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<LogoutRespModel> {
     res.cookie('auth-cookie-user', '', { httpOnly: true });
     await this.userService.clearRefreshToken(req.user.id);
-    return { msg: 'success' };
+    return { statusCode: 201, message: 'success' };
   }
 
   @Get('profile')
   @UseGuards(AuthGuard('jwt-user'))
-  getProfile(@Req() req: { user }) {
-    return req.user;
+  getProfile(@Req() req: { user }): ProfileRespModel {
+    return { statusCode: 200, message: 'success', data: req.user };
   }
 
   @Get('refresh-tokens')
@@ -71,7 +77,7 @@ export class UsersController {
   async regenerateTokens(
     @Req() req,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<RefreshTokenRespModel> {
     const token = await this.userService.getJwtToken(req.user as CurrentUser);
     const refreshToken = await this.userService.getRefreshToken(req.user.id);
     const secretData = {
@@ -80,6 +86,6 @@ export class UsersController {
     };
 
     res.cookie('auth-cookie-user', secretData, { httpOnly: true });
-    return { msg: 'success' };
+    return { statusCode: 200, message: 'success' };
   }
 }

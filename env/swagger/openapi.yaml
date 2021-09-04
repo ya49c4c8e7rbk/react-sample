@@ -17,6 +17,8 @@ servers:
 tags:
 - name: health-check
   description: ヘルスチェック
+- name: adminers
+  description: 管理者
 - name: users
   description: ユーザ
 paths:
@@ -34,11 +36,216 @@ paths:
               schema:
                 type: string
                 example: OK
+  /adminers/login:
+    post:
+      tags:
+      - adminers
+      summary: 管理者ログインAPI
+      operationId: adminers_login
+      requestBody:
+        description: ログイン管理者情報
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: test-adminer@example.com
+                password:
+                  type: string
+                  example: password
+        required: true
+      security: []
+      responses:
+        201:
+          description: successful
+          headers: 
+            Set-Cookie:
+              schema: 
+                type: string
+                example: auth-cookie-adminer=abcde12345; Path=/; HttpOnly
+          content:
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 201
+                  message: success
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 401
+                  message: Unauthorized
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 500
+                  message: Internal Server Error
+  /adminers/logout:
+    post:
+      tags:
+      - adminers
+      summary: 管理者ログアウトAPI
+      operationId: adminers_logout
+      security:
+      - cookieAuthAdminer: []
+      responses:
+        201:
+          description: successful
+          content:
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 201
+                  message: success
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 401
+                  message: Unauthorized
+  /adminers/regist:
+    post:
+      tags:
+      - adminers
+      summary: 管理者情報登録API
+      operationId: adminers_regist
+      requestBody:
+        description: 管理者情報
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: テスト管理者
+                email:
+                  type: string
+                  example: test-adminer@example.com
+                password:
+                  type: string
+                  example: password
+                confirmPassword:
+                  type: string
+                  example: password
+        required: true
+      security: []
+      responses:
+        201:
+          description: successful
+          content:
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 201
+                  message: success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 400
+                  message: [
+                    Email already exist,
+                    Confirm password not matching
+                  ]
+                  error: Bad Request
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 500
+                  message: Internal Server Error
+  /adminers/profile:
+    get:
+      security:
+      - cookieAuthAdminer: []
+      tags:
+      - adminers
+      summary: 管理者情報取得API
+      operationId: adminers_profile
+      responses:
+        200:
+          description: successful
+          content: 
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 200
+                  message: success
+                  data:
+                    id: 1
+                    name: テスト管理者
+                    userId: test-adminer
+                    iat: 12345678
+                    exp: 12345678
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 401
+                  message: Unauthorized
+  /adminers/refresh-tokens:
+    get:
+      security:
+      - cookieAuthAdminer: []
+      tags:
+      - adminers
+      summary: トークンリフレッシュAPI
+      operationId: adminers_refresh-tokens
+      responses:
+        200:
+          description: successful
+          headers: 
+            Set-Cookie:
+              schema: 
+                type: string
+                example: auth-cookie-adminer=abcde12345; Path=/; HttpOnly
+          content: 
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 200
+                  message: success
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 401
+                  message: Unauthorized
   /users/login:
     post:
       tags:
       - users
-      summary: ログインAPI
+      summary: ユーザログインAPI
       operationId: users_login
       requestBody:
         description: ログインユーザ情報
@@ -62,7 +269,7 @@ paths:
             Set-Cookie:
               schema: 
                 type: string
-                example: auth-cookie=abcde12345; Path=/; HttpOnly
+                example: auth-cookie-user=abcde12345; Path=/; HttpOnly
           content:
             application/json:
               schema: 
@@ -92,10 +299,10 @@ paths:
     post:
       tags:
       - users
-      summary: ログアウトAPI
+      summary: ユーザログアウトAPI
       operationId: users_logout
       security:
-      - cookieAuth: []
+      - cookieAuthUser: []
       responses:
         201:
           description: successful
@@ -104,10 +311,17 @@ paths:
               schema: 
                 type: object
                 example:
-                  msg: success
+                  statusCode: 201
+                  message: success
         401:
           description: Unauthorized
-          content: {}
+          content: 
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 401
+                  message: Unauthorized
   /users/regist:
     post:
       tags:
@@ -170,7 +384,7 @@ paths:
   /users/profile:
     get:
       security:
-      - cookieAuth: []
+      - cookieAuthUser: []
       tags:
       - users
       summary: ユーザ情報取得API
@@ -183,16 +397,27 @@ paths:
               schema: 
                 type: object
                 example:
-                  id: 1
-                  name: テストユーザ
-                  userId: test-user
+                  statusCode: 200
+                  message: success
+                  data:
+                    id: 1
+                    name: テストユーザ
+                    userId: test-user
+                    iat: 12345678
+                    exp: 12345678
         401:
           description: Unauthorized
-          content: {}
+          content: 
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 401
+                  message: Unauthorized
   /users/refresh-tokens:
     get:
       security:
-      - cookieAuth: []
+      - cookieAuthUser: []
       tags:
       - users
       summary: トークンリフレッシュAPI
@@ -204,18 +429,47 @@ paths:
             Set-Cookie:
               schema: 
                 type: string
-                example: auth-cookie=abcde12345; Path=/; HttpOnly
+                example: auth-cookie-user=abcde12345; Path=/; HttpOnly
           content: 
             application/json:
               schema: 
                 type: object
                 example:
-                  msg: success
+                  statusCode: 200
+                  message: success
         401:
           description: Unauthorized
-          content: {}
+          content: 
+            application/json:
+              schema: 
+                type: object
+                example:
+                  statusCode: 401
+                  message: Unauthorized
 components:
   schemas:
+    adminers:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        adminerId:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        refreshToken:
+          type: string
+        refreshTokenExp:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
     users:
       type: object
       properties:
@@ -238,10 +492,12 @@ components:
           type: string
         updated_at:
           type: string
-      xml:
-        name: users
   securitySchemes:
-    cookieAuth:
+    cookieAuthAdminer:
       type: apiKey
       in: cookie
-      name: auth-cookie
+      name: auth-cookie-adminer
+    cookieAuthUser:
+      type: apiKey
+      in: cookie
+      name: auth-cookie-user

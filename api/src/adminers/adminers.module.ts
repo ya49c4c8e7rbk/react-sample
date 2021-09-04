@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
 import { RefreshStrategy } from './refresh.strategy';
-import { Adminer } from '../entities/adminer.entity';
+import { Adminer } from '../../entities/adminer.entity';
 import { AdminersController } from './adminers.controller';
 import { AdminersService } from './adminers.service';
 import { ConfigModule } from '@nestjs/config';

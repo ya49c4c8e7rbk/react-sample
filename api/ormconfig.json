@@ -9,17 +9,17 @@
   "synchronize": true,
   "logging": true,
   "entities": [
-    "src/entities/**/*.ts"
+    "entities/**/*.ts"
   ],
   "migrations": [
-    "src/migrations/**/*.ts"
+    "migrations/**/*.ts"
   ],
   "seeds": [
-    "src/seeds/**/*.ts"
+    "seeds/**/*.ts"
   ],
   "cli": {
-    "migrationsDir": "src/migrations",
-    "entitiesDir": "src/entities",
-    "seedersDir": "src/seeds"
+    "migrationsDir": "migrations",
+    "entitiesDir": "entities",
+    "seedersDir": "seeds"
   }
 }

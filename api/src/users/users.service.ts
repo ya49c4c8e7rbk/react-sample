@@ -6,7 +6,7 @@ import { UpdateReqModel } from './models/update.req.model';
 import { UpdateRespModel } from './models/update.resp.model';
 import { DestroyRespModel } from './models/destroy.resp.model';
 import { FindOperator, MoreThanOrEqual, Repository, Like } from 'typeorm';
-import { User } from '../entities/user.entity';
+import { User } from '../../entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { CurrentUser } from 'src/models/current.user';

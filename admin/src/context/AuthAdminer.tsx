@@ -1,22 +1,22 @@
 import React, { createContext, useContext } from 'react';
 import axios from 'axios';
 import { useHistory, withRouter } from 'react-router-dom';
-import type { User } from '../../interfaces';
-import { useCurrentUser } from '../hooks/useCurrentUser';
+import type { Adminer } from '../../interfaces';
+import { useCurrentAdminer } from '../hooks/useCurrentAdminer';
 
 type OperationType = {
   login: (email: string, password: string) => void
   logout: () => void
 }
 
-const AuthUserContext = createContext<User | null | undefined>(undefined);
+const AuthAdminerContext = createContext<Adminer | null | undefined>(undefined);
 const AuthOperationContext = createContext<OperationType>({
   login: (_) => console.error('Providerが設定されていません'),
   logout: () => console.error('Providerが設定されていません'),
 });
 
-const AuthUserProvider: React.FC = ({ children }) => {
-  const { currentUser, setCurrentUser } = useCurrentUser();
+const AuthAdminerProvider: React.FC = ({ children }) => {
+  const { currentAdminer, setCurrentAdminer } = useCurrentAdminer();
   const history = useHistory();
 
   const login = async (email: string, password: string) => {
@@ -30,7 +30,7 @@ const AuthUserProvider: React.FC = ({ children }) => {
       method: 'get', baseURL: process.env.REACT_APP_API_URL, url: '/adminers/refresh-tokens',
     });
     console.log(response, response2, response3);
-    setCurrentUser(response2.data);
+    setCurrentAdminer(response2.data);
     history.push('/');
   };
 
@@ -39,21 +39,21 @@ const AuthUserProvider: React.FC = ({ children }) => {
       method: 'post', baseURL: process.env.REACT_APP_API_URL, url: '/adminers/logout',
     });
     console.log(response);
-    setCurrentUser(null);
+    setCurrentAdminer(null);
     history.push('/login');
   };
 
   return (
     <AuthOperationContext.Provider value={{ login, logout }}>
-      <AuthUserContext.Provider value={currentUser}>
+      <AuthAdminerContext.Provider value={currentAdminer}>
         { children }
-      </AuthUserContext.Provider>
+      </AuthAdminerContext.Provider>
     </AuthOperationContext.Provider>
   );
 };
 
-export const useAuthUser = () => useContext(AuthUserContext);
+export const useAuthAdminer = () => useContext(AuthAdminerContext);
 export const useLogin = () => useContext(AuthOperationContext).login;
 export const useLogout = () => useContext(AuthOperationContext).logout;
 
-export default withRouter(AuthUserProvider);
+export default withRouter(AuthAdminerProvider);

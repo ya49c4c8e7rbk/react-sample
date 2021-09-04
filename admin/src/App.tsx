@@ -3,8 +3,8 @@ import {
   BrowserRouter as Router, Redirect, Route, RouteProps, Switch,
 } from 'react-router-dom';
 import axios from 'axios';
-import AuthUserProvider from './context/AuthUser';
-import { CurrentUserProvider } from './context/CurrentUser';
+import AuthAdminerProvider from './context/AuthAdminer';
+import { CurrentAdminerProvider } from './context/CurrentAdminer';
 import Login from './pages/Login';
 import Home from './pages/Home';
 
@@ -64,15 +64,15 @@ const PrivateRoute: React.FC<RouteProps> = ({ ...props }) => {
 
 const App: React.FC = () => (
   <Router>
-    <CurrentUserProvider>
-      <AuthUserProvider>
+    <CurrentAdminerProvider>
+      <AuthAdminerProvider>
         <Switch>
           <UnAuthRoute exact path="/login" component={Login} />
           <PrivateRoute exact path="/" component={Home} />
           <Redirect to="/" />
         </Switch>
-      </AuthUserProvider>
-    </CurrentUserProvider>
+      </AuthAdminerProvider>
+    </CurrentAdminerProvider>
   </Router>
 );
 

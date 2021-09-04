@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { useLogout } from '../context/AuthUser';
+import { useLogout } from '../context/AuthAdminer';
 
 const Home = () => {
   const history = useHistory();

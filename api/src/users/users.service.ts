@@ -23,11 +23,6 @@ export class UsersService {
     return await this.user.findOne({ email });
   }
 
-  private async getPasswordHash(password: string): Promise<string> {
-    const hash = await bcrypt.hash(password, 10);
-    return hash;
-  }
-
   public async registerUser(
     regModel: RegistReqModel,
   ): Promise<RegistRespModel> {
@@ -36,7 +31,7 @@ export class UsersService {
     const newUser = new User();
     newUser.name = regModel.name;
     newUser.email = regModel.email;
-    newUser.password = await this.getPasswordHash(regModel.password);
+    newUser.password = regModel.password;
 
     await this.user.insert(newUser);
     result.statusCode = 201;

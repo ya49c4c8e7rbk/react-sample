@@ -23,11 +23,6 @@ export class AdminersService {
     return await this.adminer.findOne({ email });
   }
 
-  private async getPasswordHash(password: string): Promise<string> {
-    const hash = await bcrypt.hash(password, 10);
-    return hash;
-  }
-
   public async registerAdminer(
     regModel: RegistReqModel,
   ): Promise<RegistRespModel> {
@@ -36,7 +31,7 @@ export class AdminersService {
     const newAdminer = new Adminer();
     newAdminer.name = regModel.name;
     newAdminer.email = regModel.email;
-    newAdminer.password = await this.getPasswordHash(regModel.password);
+    newAdminer.password = regModel.password;
 
     await this.adminer.insert(newAdminer);
     result.statusCode = 201;

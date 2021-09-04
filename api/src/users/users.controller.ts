@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -15,6 +16,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { CurrentUser } from 'src/models/current.user';
 import { StoreRespModel } from './models/store.resp.model';
+import { UpdateRespModel } from './models/update.resp.model';
+import { DestroyRespModel } from './models/destroy.resp.model';
 import { LoginRespModel } from './models/login.resp.model';
 import { LogoutRespModel } from './models/logout.resp.model';
 import { ProfileRespModel } from './models/profile.resp.model';
@@ -116,9 +119,22 @@ export class UsersController {
 
   @Put('/:id')
   @UseGuards(AuthGuard('jwt-adminer'))
-  async update(@Param() params: { id: number }, @Body() updateDTO: UpdateDTO) {
+  async update(
+    @Param() params: { id: number },
+    @Body() updateDTO: UpdateDTO,
+  ): Promise<UpdateRespModel> {
     try {
       return await this.userService.update(params.id, updateDTO);
+    } catch (e) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  @Delete('/:id')
+  @UseGuards(AuthGuard('jwt-adminer'))
+  async destroy(@Param() params: { id: number }): Promise<DestroyRespModel> {
+    try {
+      return await this.userService.destroy(params.id);
     } catch (e) {
       throw new InternalServerErrorException();
     }

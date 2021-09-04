@@ -4,6 +4,7 @@ import { StoreReqModel } from './models/store.req.model';
 import { StoreRespModel } from './models/store.resp.model';
 import { UpdateReqModel } from './models/update.req.model';
 import { UpdateRespModel } from './models/update.resp.model';
+import { DestroyRespModel } from './models/destroy.resp.model';
 import { FindOperator, MoreThanOrEqual, Repository, Like } from 'typeorm';
 import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcryptjs';
@@ -22,10 +23,8 @@ export class UsersService {
   public async findAll(query): Promise<User[]> {
     const conditions: {
       name?: FindOperator<string>;
-      deleted_at: null;
-    } = {
-      deleted_at: null,
-    };
+    } = {};
+
     if (query.name !== undefined) {
       conditions.name = Like(`%${query.name}%`);
     }
@@ -33,7 +32,6 @@ export class UsersService {
   }
 
   public async findOne(conditions): Promise<User | null> {
-    conditions.deleted_at = null;
     return await this.user.findOne(conditions);
   }
 
@@ -63,6 +61,16 @@ export class UsersService {
 
     await this.user.update(id, user);
     result.statusCode = 201;
+    result.message = 'success';
+    return result;
+  }
+
+  public async destroy(id: number): Promise<DestroyRespModel> {
+    const result = new DestroyRespModel();
+
+    await this.user.softDelete(id);
+
+    result.statusCode = 200;
     result.message = 'success';
     return result;
   }

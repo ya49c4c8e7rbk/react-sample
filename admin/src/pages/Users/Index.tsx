@@ -20,6 +20,13 @@ const UsersIndex = () => {
     setUsers(response.data);
   };
 
+  const destroy = async (id: number) => {
+    const response = await axios({
+      method: 'delete', baseURL: process.env.REACT_APP_API_URL, url: `/users/${id}`,
+    });
+    console.log(response);
+  };
+
   useEffect(() => {
     findAll({ name });
   }, [name]);
@@ -40,6 +47,7 @@ const UsersIndex = () => {
             {user.name}
             {user.email}
             <Link to={`/users/${user.id}/edit`}>編集</Link>
+            <button type="button" onClick={() => { destroy(user.id); }}>削除</button>
           </li>
         ))}
       </ul>

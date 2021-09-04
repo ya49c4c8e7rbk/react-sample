@@ -1,9 +1,16 @@
-import { registerDecorator, ValidationOptions, ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
+import {
+  registerDecorator,
+  ValidationOptions,
+  ValidationArguments,
+} from 'class-validator';
 import { IsEmailUniqueUserRule } from 'src/validators/customs/IsEmailUniqueUserRule';
 import { IsEmailUniqueAdminerRule } from 'src/validators/customs/IsEmailUniqueAdminerRule';
 
-export function IsEmailUniqueUser(property?: string, validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+export const IsEmailUniqueUser = (
+  property?: string,
+  validationOptions?: ValidationOptions,
+) => {
+  return (object: unknown, propertyName: string) => {
     registerDecorator({
       name: 'IsEmailUniqueUser',
       target: object.constructor,
@@ -13,10 +20,13 @@ export function IsEmailUniqueUser(property?: string, validationOptions?: Validat
       validator: IsEmailUniqueUserRule,
     });
   };
-}
+};
 
-export function IsEmailUniqueAdminer(property?: string, validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+export const IsEmailUniqueAdminer = (
+  property?: string,
+  validationOptions?: ValidationOptions,
+) => {
+  return (object: unknown, propertyName: string) => {
     registerDecorator({
       name: 'IsEmailUniqueAdminer',
       target: object.constructor,
@@ -26,10 +36,13 @@ export function IsEmailUniqueAdminer(property?: string, validationOptions?: Vali
       validator: IsEmailUniqueAdminerRule,
     });
   };
-}
+};
 
-export function IsMatchConfirm(property: string, validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+export const IsMatchConfirm = (
+  property: string,
+  validationOptions?: ValidationOptions,
+) => {
+  return (object: unknown, propertyName: string) => {
     registerDecorator({
       name: 'isMatchConfirm',
       target: object.constructor,
@@ -38,9 +51,9 @@ export function IsMatchConfirm(property: string, validationOptions?: ValidationO
       options: validationOptions,
       validator: {
         validate(value: any, args: ValidationArguments) {
-          return value === args.object[args.constraints[0]]
+          return value === args.object[args.constraints[0]];
         },
       },
     });
   };
-}
+};

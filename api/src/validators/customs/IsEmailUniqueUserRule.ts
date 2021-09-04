@@ -1,11 +1,15 @@
-import { ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
+import {
+  ValidationArguments,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+} from 'class-validator';
 import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 
 @ValidatorConstraint({ name: 'IsEmailUniqueUserRule', async: true })
 @Injectable()
 export class IsEmailUniqueUserRule implements ValidatorConstraintInterface {
-  constructor(private readonly userService: UsersService) { }
+  constructor(private readonly userService: UsersService) {}
   async validate(email: string) {
     try {
       const user = await this.userService.getUserByEmail(email);
@@ -19,6 +23,6 @@ export class IsEmailUniqueUserRule implements ValidatorConstraintInterface {
   }
 
   defaultMessage(args: ValidationArguments) {
-    return `Email already exist`;
+    return `${args.property} already exist`;
   }
 }

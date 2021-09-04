@@ -11,7 +11,6 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { CurrentAdminer } from 'src/models/current.adminer';
-import { RegistReqModel } from './models/regist.req.model';
 import { RegistRespModel } from './models/regist.resp.model';
 import { LoginRespModel } from './models/login.resp.model';
 import { AdminersService } from './adminers.service';
@@ -22,7 +21,9 @@ export class AdminersController {
   constructor(private adminerService: AdminersService) {}
 
   @Post('regist')
-  async registerAdminer(@Body() registAdminerDTO: RegistAdminerDTO): Promise<RegistRespModel> {
+  async registerAdminer(
+    @Body() registAdminerDTO: RegistAdminerDTO,
+  ): Promise<RegistRespModel> {
     try {
       return await this.adminerService.registerAdminer(registAdminerDTO);
     } catch (e) {
@@ -32,9 +33,14 @@ export class AdminersController {
 
   @Post('login')
   @UseGuards(AuthGuard('local-adminer'))
-  async login(@Req() req, @Res({ passthrough: true }) res: Response): Promise<LoginRespModel> {
+  async login(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<LoginRespModel> {
     try {
-      const token = await this.adminerService.getJwtToken(req.user as CurrentAdminer);
+      const token = await this.adminerService.getJwtToken(
+        req.user as CurrentAdminer,
+      );
       const refreshToken = await this.adminerService.getRefreshToken(
         req.user.id,
       );
@@ -54,9 +60,7 @@ export class AdminersController {
   @UseGuards(AuthGuard('jwt-adminer'))
   async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
     res.cookie('auth-cookie-adminer', '', { httpOnly: true });
-    await this.adminerService.clearRefreshToken(
-      req.user.id,
-    );
+    await this.adminerService.clearRefreshToken(req.user.id);
     return { msg: 'success' };
   }
 
@@ -72,10 +76,10 @@ export class AdminersController {
     @Req() req,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const token = await this.adminerService.getJwtToken(req.user as CurrentAdminer);
-    const refreshToken = await this.adminerService.getRefreshToken(
-      req.user.id,
+    const token = await this.adminerService.getJwtToken(
+      req.user as CurrentAdminer,
     );
+    const refreshToken = await this.adminerService.getRefreshToken(req.user.id);
     const secretData = {
       token,
       refreshToken,

@@ -15,11 +15,9 @@ export class UsersService {
   constructor(
     @InjectRepository(User) private user: Repository<User>,
     private jwtService: JwtService,
-  ) { }
-  
-  public async getUserByEmail(
-    email: string,
-  ): Promise<User | null> {
+  ) {}
+
+  public async getUserByEmail(email: string): Promise<User | null> {
     return await this.user.findOne({ email });
   }
 

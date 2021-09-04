@@ -11,7 +11,6 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { CurrentUser } from 'src/models/current.user';
-import { RegistReqModel } from './models/regist.req.model';
 import { RegistRespModel } from './models/regist.resp.model';
 import { LoginRespModel } from './models/login.resp.model';
 import { UsersService } from './users.service';
@@ -22,7 +21,9 @@ export class UsersController {
   constructor(private userService: UsersService) {}
 
   @Post('regist')
-  async registerUser(@Body() registUserDTO: RegistUserDTO): Promise<RegistRespModel> {
+  async registerUser(
+    @Body() registUserDTO: RegistUserDTO,
+  ): Promise<RegistRespModel> {
     try {
       return await this.userService.registerUser(registUserDTO);
     } catch (e) {
@@ -32,12 +33,13 @@ export class UsersController {
 
   @Post('login')
   @UseGuards(AuthGuard('local-user'))
-  async login(@Req() req, @Res({ passthrough: true }) res: Response): Promise<LoginRespModel> {
+  async login(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<LoginRespModel> {
     try {
       const token = await this.userService.getJwtToken(req.user as CurrentUser);
-      const refreshToken = await this.userService.getRefreshToken(
-        req.user.id,
-      );
+      const refreshToken = await this.userService.getRefreshToken(req.user.id);
       const secretData = {
         token,
         refreshToken,
@@ -54,9 +56,7 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt-user'))
   async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
     res.cookie('auth-cookie-user', '', { httpOnly: true });
-    await this.userService.clearRefreshToken(
-      req.user.id,
-    );
+    await this.userService.clearRefreshToken(req.user.id);
     return { msg: 'success' };
   }
 
@@ -73,9 +73,7 @@ export class UsersController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const token = await this.userService.getJwtToken(req.user as CurrentUser);
-    const refreshToken = await this.userService.getRefreshToken(
-      req.user.id,
-    );
+    const refreshToken = await this.userService.getRefreshToken(req.user.id);
     const secretData = {
       token,
       refreshToken,

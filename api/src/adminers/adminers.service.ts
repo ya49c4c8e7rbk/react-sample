@@ -15,11 +15,9 @@ export class AdminersService {
   constructor(
     @InjectRepository(Adminer) private adminer: Repository<Adminer>,
     private jwtService: JwtService,
-  ) { }
-  
-  public async getAdminerByEmail(
-    email: string,
-  ): Promise<Adminer | null> {
+  ) {}
+
+  public async getAdminerByEmail(email: string): Promise<Adminer | null> {
     return await this.adminer.findOne({ email });
   }
 

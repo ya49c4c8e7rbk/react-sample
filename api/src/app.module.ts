@@ -19,7 +19,7 @@ import { IsEmailUniqueAdminerRule } from './validators/customs/IsEmailUniqueAdmi
       username: 'root',
       password: 'pass',
       database: 'react_sample',
-      entities: [User,Adminer],
+      entities: [User, Adminer],
       synchronize: true,
     }),
     ConfigModule.forRoot({

@@ -1,5 +1,5 @@
 export class BaseRespModel {
-    statusCode: number;
-    message: string | string[];
-    error?: string;
+  statusCode: number;
+  message: string | string[];
+  error?: string;
 }

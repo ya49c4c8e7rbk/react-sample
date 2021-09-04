@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
@@ -10,8 +6,14 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AdminersService } from './adminers.service';
 
 @Injectable()
-export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh-adminer') {
-  constructor(private adminerService: AdminersService, private readonly configService: ConfigService) {
+export class RefreshStrategy extends PassportStrategy(
+  Strategy,
+  'refresh-adminer',
+) {
+  constructor(
+    private adminerService: AdminersService,
+    private readonly configService: ConfigService,
+  ) {
     super({
       ignoreExpiration: true,
       passReqToCallback: true,

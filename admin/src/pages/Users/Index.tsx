@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
+import { User } from '../../../interfaces';
 
 const UsersIndex = () => {
   const [users, setUsers] = useState<User[]>([]);

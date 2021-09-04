@@ -1,4 +1,4 @@
-export class RegistReqModel {
+export class StoreReqModel {
   name: string;
   email: string;
   password: string;

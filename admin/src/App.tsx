@@ -7,6 +7,9 @@ import AuthAdminerProvider from './context/AuthAdminer';
 import { CurrentAdminerProvider } from './context/CurrentAdminer';
 import Login from './pages/Login';
 import Home from './pages/Home';
+import UsersIndex from './pages/Users/Index';
+import UsersCreate from './pages/Users/Create';
+import UsersEdit from './pages/Users/Edit';
 
 axios.interceptors.request.use(
   (config) => {
@@ -41,6 +44,7 @@ const UnAuthRoute: React.FC<RouteProps> = ({ ...props }) => {
 
 const PrivateRoute: React.FC<RouteProps> = ({ ...props }) => {
   const [isAuthenticated, isAuthenticatedSet] = useState<boolean | null>(null);
+
   useEffect(() => {
     axios({
       method: 'get', baseURL: process.env.REACT_APP_API_URL, url: '/adminers/refresh-tokens',
@@ -69,6 +73,9 @@ const App: React.FC = () => (
         <Switch>
           <UnAuthRoute exact path="/login" component={Login} />
           <PrivateRoute exact path="/" component={Home} />
+          <PrivateRoute exact path="/users" component={UsersIndex} />
+          <PrivateRoute exact path="/users/create" component={UsersCreate} />
+          <PrivateRoute exact path="/users/:id/edit" component={UsersEdit} />
           <Redirect to="/" />
         </Switch>
       </AuthAdminerProvider>

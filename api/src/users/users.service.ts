@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RegistReqModel } from './models/regist.req.model';
-import { RegistRespModel } from './models/regist.resp.model';
-import { MoreThanOrEqual, Repository } from 'typeorm';
+import { StoreReqModel } from './models/store.req.model';
+import { StoreRespModel } from './models/store.resp.model';
+import { UpdateReqModel } from './models/update.req.model';
+import { UpdateRespModel } from './models/update.resp.model';
+import { FindOperator, MoreThanOrEqual, Repository, Like } from 'typeorm';
 import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
@@ -17,14 +19,26 @@ export class UsersService {
     private jwtService: JwtService,
   ) {}
 
-  public async getUserByEmail(email: string): Promise<User | null> {
-    return await this.user.findOne({ email });
+  public async findAll(query): Promise<User[]> {
+    const conditions: {
+      name?: FindOperator<string>;
+      deleted_at: null;
+    } = {
+      deleted_at: null,
+    };
+    if (query.name !== undefined) {
+      conditions.name = Like(`%${query.name}%`);
+    }
+    return await this.user.find(conditions);
   }
 
-  public async registerUser(
-    regModel: RegistReqModel,
-  ): Promise<RegistRespModel> {
-    const result = new RegistRespModel();
+  public async findOne(conditions): Promise<User | null> {
+    conditions.deleted_at = null;
+    return await this.user.findOne(conditions);
+  }
+
+  public async store(regModel: StoreReqModel): Promise<StoreRespModel> {
+    const result = new StoreRespModel();
 
     const newUser = new User();
     newUser.name = regModel.name;
@@ -32,6 +46,22 @@ export class UsersService {
     newUser.password = regModel.password;
 
     await this.user.insert(newUser);
+    result.statusCode = 201;
+    result.message = 'success';
+    return result;
+  }
+
+  public async update(
+    id: number,
+    regModel: UpdateReqModel,
+  ): Promise<UpdateRespModel> {
+    const result = new UpdateRespModel();
+
+    const user = new User();
+    user.name = regModel.name;
+    user.email = regModel.email;
+
+    await this.user.update(id, user);
     result.statusCode = 201;
     result.message = 'success';
     return result;

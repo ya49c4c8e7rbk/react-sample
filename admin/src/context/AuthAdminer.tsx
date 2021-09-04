@@ -20,26 +20,23 @@ const AuthAdminerProvider: React.FC = ({ children }) => {
   const history = useHistory();
 
   const login = async (email: string, password: string) => {
-    const response = await axios({
+    await axios({
       method: 'post', baseURL: process.env.REACT_APP_API_URL, url: '/adminers/login', data: { email, password },
     });
-    const response2 = await axios({
+    const response = await axios({
       method: 'get', baseURL: process.env.REACT_APP_API_URL, url: '/adminers/profile',
     });
-    const response3 = await axios({
-      method: 'get', baseURL: process.env.REACT_APP_API_URL, url: '/adminers/refresh-tokens',
-    });
-    console.log(response, response2, response3);
-    setCurrentAdminer(response2.data);
+    setCurrentAdminer(response.data);
+
     history.push('/');
   };
 
   const logout = async () => {
-    const response = await axios({
+    await axios({
       method: 'post', baseURL: process.env.REACT_APP_API_URL, url: '/adminers/logout',
     });
-    console.log(response);
     setCurrentAdminer(null);
+
     history.push('/login');
   };
 

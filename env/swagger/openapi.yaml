@@ -322,12 +322,12 @@ paths:
                 example:
                   statusCode: 401
                   message: Unauthorized
-  /users/regist:
+  /users:
     post:
       tags:
       - users
       summary: ユーザ情報登録API
-      operationId: users_regist
+      operationId: users_store
       requestBody:
         description: ユーザ情報
         content:

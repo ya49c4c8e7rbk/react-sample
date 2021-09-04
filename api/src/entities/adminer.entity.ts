@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 
@@ -40,4 +41,7 @@ export class Adminer {
 
   @UpdateDateColumn()
   readonly updated_at?: Date;
+
+  @DeleteDateColumn({ default: null })
+  readonly deleted_at?: Date;
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { useLogout } from '../context/AuthAdminer';
 
 const Home = () => {
@@ -14,6 +14,9 @@ const Home = () => {
         <button type="button" onClick={logout}>ログアウトする</button>
         <button type="button" onClick={() => history.push('/login')}>/loginへアクセスしてみる</button>
       </div>
+      <ul>
+        <li><Link to="/users">UsersIndex</Link></li>
+      </ul>
     </>
   );
 };

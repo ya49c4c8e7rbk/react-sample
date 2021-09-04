@@ -7,7 +7,7 @@ import { IsEmailUniqueUserRule } from 'src/validators/customs/IsEmailUniqueUserR
 import { IsEmailUniqueAdminerRule } from 'src/validators/customs/IsEmailUniqueAdminerRule';
 
 export const IsEmailUniqueUser = (
-  property?: string,
+  property?: any,
   validationOptions?: ValidationOptions,
 ) => {
   return (object: unknown, propertyName: string) => {

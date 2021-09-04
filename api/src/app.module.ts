@@ -9,6 +9,8 @@ import { Adminer } from './entities/adminer.entity';
 import { AdminersModule } from './adminers/adminers.module';
 import { IsEmailUniqueUserRule } from './validators/customs/IsEmailUniqueUserRule';
 import { IsEmailUniqueAdminerRule } from './validators/customs/IsEmailUniqueAdminerRule';
+import { APP_PIPE } from '@nestjs/core';
+import { ValidationPipe2 } from './validation.pipe';
 
 @Module({
   imports: [
@@ -29,6 +31,14 @@ import { IsEmailUniqueAdminerRule } from './validators/customs/IsEmailUniqueAdmi
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService, IsEmailUniqueUserRule, IsEmailUniqueAdminerRule],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe2,
+    },
+    IsEmailUniqueUserRule,
+    IsEmailUniqueAdminerRule,
+  ],
 })
 export class AppModule {}

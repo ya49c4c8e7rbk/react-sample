@@ -61,7 +61,10 @@ export class AdminersController {
 
   @Post('logout')
   @UseGuards(AuthGuard('jwt-adminer'))
-  async logout(@Req() req, @Res({ passthrough: true }) res: Response): Promise<LogoutRespModel> {
+  async logout(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<LogoutRespModel> {
     res.cookie('auth-cookie-adminer', '', { httpOnly: true });
     await this.adminerService.clearRefreshToken(req.user.id);
     return { statusCode: 201, message: 'success' };
